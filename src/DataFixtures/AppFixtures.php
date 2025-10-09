@@ -22,7 +22,6 @@ class AppFixtures extends Fixture
         {
             $ad = new Ad();
             $title = $faker->sentence();
-            $slug = $slugify->slugify($title);
             $coverImage = "https://picsum.photos/id/".$i."/1000/350";
             $introduction = $faker->paragraph(2);
             $content = "<p>".join('</p><p>',$faker->paragraphs(5))."</p>";
@@ -31,8 +30,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($introduction)
                 ->setContent($content)
                 ->setPrice(rand(40, 200))
-                ->setRooms(rand(1, 5))
-                ->setSlug($slug);
+                ->setRooms(rand(1, 5));
 
             $manager->persist($ad);
         }

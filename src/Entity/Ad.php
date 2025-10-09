@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\AdRepository;
+use Cocur\Slugify\Slugify;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Ad
 {
     #[ORM\Id]
@@ -38,6 +40,17 @@ class Ad
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function initializeSlug() :void 
+    {
+        if(empty($this->slug))
+        {
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->title);
+        }
     }
 
     public function getTitle(): ?string
