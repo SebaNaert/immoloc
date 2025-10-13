@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ad;
+use App\Form\AnnonceType;
 use App\Repository\AdRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -21,6 +22,17 @@ final class AdController extends AbstractController
         // vue
         return $this->render('ad/index.html.twig', [
             'ads' => $ads
+        ]);
+    }
+
+    #[Route('/ads/new', name: "ads_create")]
+    public function create(): Response
+    {
+        $ad = new Ad();
+        $form = $this->createForm(AnnonceType::class, $ad);
+
+        return $this->render('ad/new.html.twig', [
+            'myForm' => $form->createView()
         ]);
     }
 
