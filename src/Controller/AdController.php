@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ad;
+use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +38,21 @@ final class AdController extends AbstractController
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
         $ad = new Ad();
+
+        // Instanciation de 2 objets Image
+        $image1 = new Image();
+        $image2 = new Image();
+
+        // Set les objets Image avec les infos Urls et Caption
+        $image1->setUrl("https://picsum.photos/400/200")
+            ->setCaption('Titre 1');
+        $image2->setUrl("https://picsum.photos/400/200")
+            ->setCaption('Titre 2');
+
+        // Ajout des 2 objets Image à mon objet Ad
+        $ad->addImage($image1);
+        $ad->addImage($image2);
+
         $form = $this->createForm(AnnonceType::class, $ad);
         // Permet de vérifier l'état du formulaire (envoyé ou non par exemple)
         $form->handleRequest($request);
@@ -49,6 +65,10 @@ final class AdController extends AbstractController
             // dump($arrayForm['annonce']);
             $manager->persist($ad);
             $manager->flush();
+            $this->addFlash(
+                'success',
+                "L'annonce <strong>" . $ad->getTitle() . "</strong> a bien été enregistrée"
+            );
             return $this->redirectToRoute('ads_show', ['slug' => $ad->getSlug()]);
         }
         // dump($request);
