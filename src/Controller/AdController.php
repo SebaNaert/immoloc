@@ -39,29 +39,34 @@ final class AdController extends AbstractController
     {
         $ad = new Ad();
 
-        // Instanciation de 2 objets Image
-        $image1 = new Image();
-        $image2 = new Image();
+        // // Instanciation de 2 objets Image
+        // $image1 = new Image();
+        // $image2 = new Image();
 
-        // Set les objets Image avec les infos Urls et Caption
-        $image1->setUrl("https://picsum.photos/400/200")
-            ->setCaption('Titre 1');
-        $image2->setUrl("https://picsum.photos/400/200")
-            ->setCaption('Titre 2');
+        // // Set les objets Image avec les infos Urls et Caption
+        // $image1->setUrl("https://picsum.photos/400/200")
+        //     ->setCaption('Titre 1');
+        // $image2->setUrl("https://picsum.photos/400/200")
+        //     ->setCaption('Titre 2');
 
-        // Ajout des 2 objets Image à mon objet Ad
-        $ad->addImage($image1);
-        $ad->addImage($image2);
+        // // Ajout des 2 objets Image à mon objet Ad
+        // $ad->addImage($image1);
+        // $ad->addImage($image2);
 
         $form = $this->createForm(AnnonceType::class, $ad);
         // Permet de vérifier l'état du formulaire (envoyé ou non par exemple)
         $form->handleRequest($request);
 
-        $arrayForm = $request->request->all();
+        // $arrayForm = $request->request->all();
         // isSubmitted : permet de vérifier si formulaire soumis ou non
         // isValie : permet de vérifier si formulaire est valide ou non
         if ($form->isSubmitted() && $form->isValid()) {
 
+            foreach($ad->getImages() as $image)
+            {
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
             // dump($arrayForm['annonce']);
             $manager->persist($ad);
             $manager->flush();
